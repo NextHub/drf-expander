@@ -1,0 +1,4 @@
+site_name: drf-expander
+site_description: Inline expansion for Django REST Framework.
+repo_url: https://github.com/NextHub/drf-expander
+site_dir: html
