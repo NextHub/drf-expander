@@ -1,7 +1,6 @@
 # drf-expander
 
-[![build-status-image]][travis]
-[![pypi-version]][pypi]
+This project is currently under heavy development and should not be used until this notice has been removed.
 
 ## Overview
 
