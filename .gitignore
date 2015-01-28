@@ -11,6 +11,11 @@ dist/
 *.egg-info/
 MANIFEST
 
+.idea/
+.project
+.pydevproject
+.settings/
+
 bin/
 include/
 lib/
