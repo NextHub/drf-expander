@@ -17,12 +17,12 @@ class ExpanderOptimizer():
             field_path = utils.get_serializer_field_path(descendant.serializer)
             method_suffix = '__'.join(field_path)
 
-            expand_method = getattr(self, 'expand_' + method_suffix, self.fallback_expand)
+            expand_method = getattr(self, 'expand_' + method_suffix, self.default_expand)
             instance = expand_method(instance, descendant)
 
         return instance
 
-    def fallback_expand(self, instance, expander):
+    def default_expand(self, instance, expander):
         return instance
 
 
@@ -31,7 +31,7 @@ class PrefetchRelatedOptimizer(ExpanderOptimizer):
     Optimizer which falls back on prefetch related.
     """
 
-    def fallback_expand(self, instance, expander):
+    def default_expand(self, instance, expander):
         if hasattr(instance, 'model'):
             source_path = utils.get_serializer_source_path(expander.serializer)
             source_name = utils.get_model_source_name(source_path, instance.model)
@@ -47,7 +47,7 @@ class SelectRelatedOptimizer(ExpanderOptimizer):
     Optimizer which falls backs on select related.
     """
 
-    def fallback_expand(self, instance, expander):
+    def default_expand(self, instance, expander):
         if hasattr(instance, 'model'):
             source_path = utils.get_serializer_source_path(expander.serializer)
             source_name = utils.get_model_source_name(source_path, instance.model)
