@@ -14,7 +14,11 @@ class ExpanderOptimizer():
         expander = self.adapter.context['expander']
 
         for descendant in expander.walk():
-            instance = self.fallback_expand(instance, descendant)
+            field_path = utils.get_serializer_field_path(descendant.serializer)
+            method_suffix = '__'.join(field_path)
+
+            expand_method = getattr(self, 'expand_' + method_suffix, self.fallback_expand)
+            instance = expand_method(instance, descendant)
 
         return instance
 

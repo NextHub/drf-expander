@@ -10,6 +10,7 @@ class ExpanderContext():
 
     def __init__(self, parent, serializer):
         self.children = dict()
+        self.data = dict()
         self.parent = parent
         self.serializer = serializer
 
