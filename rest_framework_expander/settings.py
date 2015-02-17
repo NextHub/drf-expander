@@ -1,3 +1,4 @@
+from collections import OrderedDict
 from django.conf import settings
 from rest_framework.settings import APISettings
 
@@ -5,6 +6,10 @@ from rest_framework.settings import APISettings
 USER_SETTINGS = getattr(settings, 'REST_FRAMEWORK_EXPANDER', dict())
 
 DEFAULTS = {
+    'COLLAPSED_FIELDS': OrderedDict((
+        ('id', 'rest_framework_expander.fields.CollapsedIdentityField'),
+        ('url', 'rest_framework_expander.fields.CollapsedHyperlinkField'),
+    )),
     'DEFAULT_EXPANDED': True,
     'DEFAULT_PARSER_CLASS': 'rest_framework_expander.parsers.ExpanderParser',
     'DEFAULT_OPTIMIZER_CLASS': 'rest_framework_expander.optimizers.PrefetchRelatedOptimizer',
