@@ -12,7 +12,12 @@ class CollapsedIdentityField(ReadOnlyField):
         if self.field_name not in self.parent.fields:
             raise SkipField()
 
-        source = self.parent.source + '_id'
+        source = self.parent.source
+
+        if source == '*':
+            source = 'pk'
+        else:
+            source += '_id'
 
         if hasattr(instance, source):
             return getattr(instance, source)
