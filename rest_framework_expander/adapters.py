@@ -37,10 +37,6 @@ class SerializerAdapter():
         return self.serializer
 
     @property
-    def root(self):
-        return self.serializer.root
-
-    @property
     def many(self):
         return False
 
