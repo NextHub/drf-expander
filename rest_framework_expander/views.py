@@ -30,8 +30,9 @@ class ExpanderViewMixin():
         parser = self.get_expander_parser(adapter)
         adapter.context['expander'] = parser.parse()
 
-        optimizer = self.get_expander_optimizer(adapter)
-        adapter.instance = optimizer.optimize()
+        if adapter.many:
+            optimizer = self.get_expander_optimizer(adapter)
+            adapter.instance = optimizer.optimize()
 
     def get_serializer(self, *args, **kwargs):
         serializer = super(ExpanderViewMixin, self).get_serializer(*args, **kwargs)
