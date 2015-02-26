@@ -14,7 +14,7 @@ class CollapsedIdentityField(ReadOnlyField):
 
         source = self.parent.source
 
-        if source == '*':
+        if not source or source == '*':
             source = 'pk'
         else:
             source += '_id'
