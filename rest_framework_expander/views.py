@@ -38,8 +38,3 @@ class ExpanderViewMixin():
         serializer = super(ExpanderViewMixin, self).get_serializer(*args, **kwargs)
         self.run_expander(serializer)
         return serializer
-
-    def get_pagination_serializer(self, page):
-        serializer = super(ExpanderViewMixin, self).get_pagination_serializer(page)
-        self.run_expander(serializer)
-        return serializer

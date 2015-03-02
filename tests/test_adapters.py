@@ -1,12 +1,8 @@
-from django.core.paginator import Page
-from rest_framework.pagination import PaginationSerializer
 from rest_framework.request import Request
 from rest_framework.serializers import BaseSerializer
 from rest_framework.test import APITestCase, APIRequestFactory
 
-from rest_framework_expander.adapters import (
-    get_serializer_adapter, SerializerAdapter, ListSerializerAdapter, PaginationSerializerAdapter
-)
+from rest_framework_expander.adapters import get_serializer_adapter, SerializerAdapter, ListSerializerAdapter
 from rest_framework_expander.exceptions import ExpanderAdapterMissing
 from tests.serializers import ThirdSerializer
 
@@ -84,31 +80,6 @@ class ListSerializerAdapterTestCase(AdapterTestCaseMixin, APITestCase):
         self.fields = self.object_serializer.fields
 
         self.adapter_class = ListSerializerAdapter
-        self.adapter = self.adapter_class(self.serializer)
-
-
-class PaginationSerializerAdapterTestCase(AdapterTestCaseMixin, APITestCase):
-    """
-    Tests PaginationSerializerAdapter.
-    """
-
-    def setUp(self):
-        self.request = Request(APIRequestFactory().get('/thirds/'))
-        self.context = {'request': self.request}
-        self.instance = object()
-
-        class SerializerClass(PaginationSerializer):
-            class Meta():
-                object_serializer_class = ThirdSerializer
-
-        self.many = True
-        self.page = Page(self.instance, 0, None)
-        self.serializer = SerializerClass(instance=self.page, context=self.context)
-
-        self.object_serializer = self.serializer.fields['results'].child
-        self.fields = self.object_serializer.fields
-
-        self.adapter_class = PaginationSerializerAdapter
         self.adapter = self.adapter_class(self.serializer)
 
 

@@ -1,4 +1,3 @@
-from rest_framework.pagination import BasePaginationSerializer
 from rest_framework.serializers import ListSerializer, Serializer
 
 from rest_framework_expander.exceptions import ExpanderAdapterMissing
@@ -55,31 +54,7 @@ class ListSerializerAdapter(SerializerAdapter):
         return True
 
 
-class PaginationSerializerAdapter(SerializerAdapter):
-    """
-    Common interface for pagination serializers.
-    """
-
-    @property
-    def instance(self):
-        return self.serializer.instance.object_list
-
-    @instance.setter
-    def instance(self, instance):
-        self.serializer.instance.object_list = instance
-
-    @property
-    def object_serializer(self):
-        results_field = self.serializer.results_field
-        return self.serializer.fields[results_field].child
-
-    @property
-    def many(self):
-        return True
-
-
 ADAPTER_MAPPING = (
-    (BasePaginationSerializer, PaginationSerializerAdapter),
     (ListSerializer, ListSerializerAdapter),
     (Serializer, SerializerAdapter),
 )
