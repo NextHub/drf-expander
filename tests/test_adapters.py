@@ -1,3 +1,4 @@
+from rest_framework.pagination import PageNumberPagination
 from rest_framework.request import Request
 from rest_framework.serializers import BaseSerializer
 from rest_framework.test import APITestCase, APIRequestFactory
@@ -82,6 +83,30 @@ class ListExpanderAdapterTestCase(AdapterTestCaseMixin, APITestCase):
         self.fields = self.object_serializer.fields
 
         self.adapter_class = ListExpanderAdapter
+        self.adapter = self.adapter_class(self.serializer)
+
+
+class PageExpanderAdapterTestCase(AdapterTestCaseMixin, APITestCase):
+    """
+    Tests PageExpanderAdapter.
+    """
+
+    def setUp(self):
+        self.request = Request(APIRequestFactory().get('/thirds/'))
+        self.context = {'request': self.request}
+
+        pagination = PageNumberPagination()
+        pagination.paginate_by = 1
+        page = pagination.paginate_queryset([object()], self.request)
+
+        self.many = True
+        self.serializer = ThirdSerializer(instance=page, context=self.context, many=self.many)
+        self.instance = page.object_list
+
+        self.object_serializer = self.serializer.child
+        self.fields = self.object_serializer.fields
+
+        self.adapter_class = PageExpanderAdapter
         self.adapter = self.adapter_class(self.serializer)
 
 

@@ -54,6 +54,18 @@ class ListExpanderAdapter(ExpanderAdapter):
         return True
 
 
+class PageExpanderAdapter(ListExpanderAdapter):
+    """
+    Common interface for list serializers with page number pagination.
+    """
+
+    @property
+    def instance(self):
+        return self.serializer.instance.object_list
+
+    @instance.setter
+    def instance(self, instance):
+        self.serializer.instance.object_list = instance
 
 
 class ExpanderAdapterStrategy():
@@ -63,7 +75,10 @@ class ExpanderAdapterStrategy():
 
     def __new__(cls, serializer):
         if isinstance(serializer, ListSerializer):
-            return ListExpanderAdapter(serializer)
+            if hasattr(serializer.instance, 'object_list'):
+                return PageExpanderAdapter(serializer)
+            else:
+                return ListExpanderAdapter(serializer)
 
         if isinstance(serializer, Serializer):
             return ExpanderAdapter(serializer)
