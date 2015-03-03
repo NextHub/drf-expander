@@ -12,7 +12,7 @@ DEFAULTS = {
     )),
     'DEFAULT_EXPANDED': True,
     'DEFAULT_PARSER_CLASS': 'rest_framework_expander.parsers.ExpanderParser',
-    'DEFAULT_OPTIMIZER_CLASS': 'rest_framework_expander.optimizers.PrefetchRelatedOptimizer',
+    'DEFAULT_OPTIMIZER_CLASS': 'rest_framework_expander.optimizers.PrefetchExpanderOptimizer',
     'EXPANSION_KEY': 'expand',
     'EXPANSION_ITEM_SEPARATOR': ',',
     'EXPANSION_PATH_SEPARATOR': '.',
@@ -23,7 +23,7 @@ DEFAULTS = {
 
 IMPORT_STRINGS = (
     'DEFAULT_PARSER_CLASS',
-    'DEFAULT_OPTIMIZER_CLASS'
+    'DEFAULT_OPTIMIZER_CLASS',
 )
 
 

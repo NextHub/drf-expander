@@ -26,7 +26,7 @@ class ExpanderOptimizer():
         return instance
 
 
-class PrefetchRelatedOptimizer(ExpanderOptimizer):
+class PrefetchExpanderOptimizer(ExpanderOptimizer):
     """
     Optimizer which falls back on prefetch related.
     """
@@ -42,7 +42,7 @@ class PrefetchRelatedOptimizer(ExpanderOptimizer):
         return instance
 
 
-class SelectRelatedOptimizer(ExpanderOptimizer):
+class SelectExpanderOptimizer(ExpanderOptimizer):
     """
     Optimizer which falls backs on select related.
     """
