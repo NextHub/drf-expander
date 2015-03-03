@@ -1,4 +1,4 @@
-from rest_framework_expander.adapters import get_serializer_adapter
+from rest_framework_expander.adapters import get_expander_adapter
 from rest_framework_expander.settings import expander_settings
 
 
@@ -25,7 +25,7 @@ class ExpanderViewMixin():
         """
         Runs the expander parser and optimizer.
         """
-        adapter = get_serializer_adapter(serializer)
+        adapter = get_expander_adapter(serializer)
 
         parser = self.get_expander_parser(adapter)
         adapter.context['expander'] = parser.parse()

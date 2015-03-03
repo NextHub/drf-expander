@@ -2,7 +2,7 @@ from rest_framework.request import Request
 from rest_framework.serializers import BaseSerializer
 from rest_framework.test import APITestCase, APIRequestFactory
 
-from rest_framework_expander.adapters import get_serializer_adapter, SerializerAdapter, ListSerializerAdapter
+from rest_framework_expander.adapters import get_expander_adapter, ExpanderAdapter, ListExpanderAdapter
 from rest_framework_expander.exceptions import ExpanderAdapterMissing
 from tests.serializers import ThirdSerializer
 
@@ -12,8 +12,8 @@ class AdapterTestCaseMixin():
     Mixin containing generic adapter test cases.
     """
 
-    def test_get_serializer_adapter(self):
-        adapter = get_serializer_adapter(self.serializer)
+    def test_get_expander_adapter(self):
+        adapter = get_expander_adapter(self.serializer)
         self.assertIsInstance(adapter, self.adapter_class)
 
     def test_context(self):
@@ -43,9 +43,9 @@ class AdapterTestCaseMixin():
         self.assertIs(self.many, self.adapter.many)
 
 
-class SerializerAdapterTestCase(AdapterTestCaseMixin, APITestCase):
+class ExpanderAdapterTestCase(AdapterTestCaseMixin, APITestCase):
     """
-    Tests SerializerAdapter.
+    Tests ExpanderAdapter.
     """
 
     def setUp(self):
@@ -59,13 +59,13 @@ class SerializerAdapterTestCase(AdapterTestCaseMixin, APITestCase):
         self.object_serializer = self.serializer
         self.fields = self.object_serializer.fields
 
-        self.adapter_class = SerializerAdapter
+        self.adapter_class = ExpanderAdapter
         self.adapter = self.adapter_class(self.serializer)
 
 
-class ListSerializerAdapterTestCase(AdapterTestCaseMixin, APITestCase):
+class ListExpanderAdapterTestCase(AdapterTestCaseMixin, APITestCase):
     """
-    Tests ListSerializerAdapter.
+    Tests ListExpanderAdapter.
     """
 
     def setUp(self):
@@ -79,7 +79,7 @@ class ListSerializerAdapterTestCase(AdapterTestCaseMixin, APITestCase):
         self.object_serializer = self.serializer.child
         self.fields = self.object_serializer.fields
 
-        self.adapter_class = ListSerializerAdapter
+        self.adapter_class = ListExpanderAdapter
         self.adapter = self.adapter_class(self.serializer)
 
 
@@ -89,4 +89,4 @@ class MiscellaneousAdapterTestCase(APITestCase):
     """
 
     def test_expander_adapter_missing(self):
-        self.assertRaises(ExpanderAdapterMissing, get_serializer_adapter, BaseSerializer())
+        self.assertRaises(ExpanderAdapterMissing, get_expander_adapter, BaseSerializer())

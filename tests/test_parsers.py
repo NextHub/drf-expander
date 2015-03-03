@@ -2,7 +2,7 @@ from django.utils import six
 from rest_framework.request import Request
 from rest_framework.test import APITestCase, APIRequestFactory
 
-from rest_framework_expander.adapters import SerializerAdapter
+from rest_framework_expander.adapters import ExpanderAdapter
 from rest_framework_expander.exceptions import ExpanderDepthBreached, ExpanderFieldMissing
 from rest_framework_expander.parsers import ExpanderParser
 from tests.serializers import ThirdSerializer
@@ -24,7 +24,7 @@ class ExpansionParserTestCase(APITestCase):
 
         request = Request(APIRequestFactory().get('/thirds/', params))
         serializer = ThirdSerializer(context={'request': request})
-        adapter = SerializerAdapter(serializer)
+        adapter = ExpanderAdapter(serializer)
         parser = ExpanderParser(adapter)
 
         for key, value in six.iteritems(settings):
@@ -126,7 +126,7 @@ class ExpansionParserTestCase(APITestCase):
     def test_custom_query_parameter(self):
         request = Request(APIRequestFactory().get('/thirds/', {'pony': 'extra'}))
         serializer = ThirdSerializer(context={'request': request})
-        adapter = SerializerAdapter(serializer)
+        adapter = ExpanderAdapter(serializer)
         parser = ExpanderParser(adapter)
         parser.expansion_key = 'pony'
 
