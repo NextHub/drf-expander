@@ -11,6 +11,7 @@ DEFAULTS = {
         ('url', 'rest_framework_expander.fields.CollapsedHyperlinkField'),
     )),
     'DEFAULT_EXPANDED': True,
+    'DEFAULT_ADAPTER_CLASS': 'rest_framework_expander.adapters.ExpanderAdapterStrategy',
     'DEFAULT_PARSER_CLASS': 'rest_framework_expander.parsers.ExpanderParser',
     'DEFAULT_OPTIMIZER_CLASS': 'rest_framework_expander.optimizers.PrefetchExpanderOptimizer',
     'EXPANSION_KEY': 'expand',
@@ -22,6 +23,7 @@ DEFAULTS = {
 }
 
 IMPORT_STRINGS = (
+    'DEFAULT_ADAPTER_CLASS',
     'DEFAULT_PARSER_CLASS',
     'DEFAULT_OPTIMIZER_CLASS',
 )

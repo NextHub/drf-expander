@@ -2,7 +2,9 @@ from rest_framework.request import Request
 from rest_framework.serializers import BaseSerializer
 from rest_framework.test import APITestCase, APIRequestFactory
 
-from rest_framework_expander.adapters import get_expander_adapter, ExpanderAdapter, ListExpanderAdapter
+from rest_framework_expander.adapters import (
+    ExpanderAdapterStrategy, ExpanderAdapter, ListExpanderAdapter, PageExpanderAdapter
+)
 from rest_framework_expander.exceptions import ExpanderAdapterMissing
 from tests.serializers import ThirdSerializer
 
@@ -12,8 +14,8 @@ class AdapterTestCaseMixin():
     Mixin containing generic adapter test cases.
     """
 
-    def test_get_expander_adapter(self):
-        adapter = get_expander_adapter(self.serializer)
+    def test_expander_adapter_strategy(self):
+        adapter = ExpanderAdapterStrategy(self.serializer)
         self.assertIsInstance(adapter, self.adapter_class)
 
     def test_context(self):
@@ -89,4 +91,4 @@ class MiscellaneousAdapterTestCase(APITestCase):
     """
 
     def test_expander_adapter_missing(self):
-        self.assertRaises(ExpanderAdapterMissing, get_expander_adapter, BaseSerializer())
+        self.assertRaises(ExpanderAdapterMissing, ExpanderAdapterStrategy, BaseSerializer())

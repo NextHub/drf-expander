@@ -54,18 +54,18 @@ class ListExpanderAdapter(ExpanderAdapter):
         return True
 
 
-ADAPTER_MAPPING = (
-    (ListSerializer, ListExpanderAdapter),
-    (Serializer, ExpanderAdapter),
-)
 
 
-def get_expander_adapter(serializer, mapping=ADAPTER_MAPPING):
+class ExpanderAdapterStrategy():
     """
-    Returns the best matching adapter for serializer.
+    Returns an instance of the best matching adapter class for serializer.
     """
-    for serializer_class, adapter_class in mapping:
-        if isinstance(serializer, serializer_class):
-            return adapter_class(serializer)
 
-    raise ExpanderAdapterMissing()
+    def __new__(cls, serializer):
+        if isinstance(serializer, ListSerializer):
+            return ListExpanderAdapter(serializer)
+
+        if isinstance(serializer, Serializer):
+            return ExpanderAdapter(serializer)
+
+        raise ExpanderAdapterMissing()
