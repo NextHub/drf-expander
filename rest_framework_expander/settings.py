@@ -13,7 +13,7 @@ DEFAULTS = {
     'DEFAULT_EXPANDED': True,
     'DEFAULT_ADAPTER_CLASS': 'rest_framework_expander.adapters.ExpanderAdapterStrategy',
     'DEFAULT_PARSER_CLASS': 'rest_framework_expander.parsers.ExpanderParser',
-    'DEFAULT_OPTIMIZER_CLASS': 'rest_framework_expander.optimizers.PrefetchExpanderOptimizer',
+    'DEFAULT_OPTIMIZER_CLASS': 'rest_framework_expander.optimizers.PrefetchExpanderOptimizerSet',
     'EXPANSION_KEY': 'expand',
     'EXPANSION_ITEM_SEPARATOR': ',',
     'EXPANSION_PATH_SEPARATOR': '.',

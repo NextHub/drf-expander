@@ -1,5 +1,3 @@
-from collections import deque
-
 from rest_framework_expander.utils import get_serializer_field_path
 
 
@@ -27,19 +25,3 @@ class ExpanderContext():
                 break
 
         return current
-
-    def walk(self):
-        """
-        Yields all descendants using a level-order walk.
-        """
-        queue = deque()
-        queue.append(self)
-
-        while len(queue):
-            node = queue.popleft()
-
-            children = node.children.values()
-            queue.extend(children)
-
-            for child in children:
-                yield child

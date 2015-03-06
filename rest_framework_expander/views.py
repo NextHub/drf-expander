@@ -1,3 +1,6 @@
+from rest_framework.generics import GenericAPIView
+from rest_framework.response import Response
+
 from rest_framework_expander.settings import expander_settings
 
 
@@ -29,18 +32,45 @@ class ExpanderViewMixin():
 
     def run_expander(self, serializer):
         """
-        Runs the expander parser and optimizer.
+        Runs the expander parser.
         """
         adapter = self.get_expander_adapter(serializer)
-
         parser = self.get_expander_parser(adapter)
         adapter.context['expander'] = parser.parse()
-
-        if adapter.many:
-            optimizer = self.get_expander_optimizer(adapter)
-            adapter.instance = optimizer.optimize()
 
     def get_serializer(self, *args, **kwargs):
         serializer = super(ExpanderViewMixin, self).get_serializer(*args, **kwargs)
         self.run_expander(serializer)
         return serializer
+
+
+class ExpanderListModelMixin(ExpanderViewMixin):
+    """
+    Provides a generic list view with expander optimizations.
+    """
+
+    def list(self, request, *args, **kwargs):
+        queryset = self.filter_queryset(self.get_queryset())
+        serializer = self.get_serializer(queryset, many=True)
+
+        adapter = self.get_expander_adapter(serializer)
+        optimizer = self.get_expander_optimizer(adapter)
+
+        queryset = optimizer.to_optimized_queryset(queryset)
+        page = self.paginate_queryset(queryset)
+
+        if page is not None:
+            adapter.instance = optimizer.to_optimized_objects(list(page))
+            return self.get_paginated_response(serializer.data)
+        else:
+            adapter.instance = optimizer.to_optimized_objects(list(queryset))
+            return Response(serializer.data)
+
+
+class ExpanderListAPIView(ExpanderListModelMixin, GenericAPIView):
+    """
+    Provides a list API view with expander optimizations.
+    """
+
+    def get(self, request, *args, **kwargs):
+        return self.list(request, *args, **kwargs)
