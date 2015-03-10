@@ -131,7 +131,6 @@ class ExpanderListSerializer(ExpanderSerializerMixin, Serializer):
             if six.text_type(self.child_class):
                 self.child_class = import_from_string(self.child_class, None)
 
-            assert isinstance(self.child_class, ExpanderSerializerMixin)
             self._child = self.child_class(context=self.context, source='*')
             self._child.bind('results', self)
 
