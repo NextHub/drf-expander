@@ -1,6 +1,8 @@
 from collections import OrderedDict
 from django.utils import six
 from rest_framework.fields import SkipField
+from rest_framework.reverse import reverse
+from rest_framework.serializers import Serializer
 from rest_framework.settings import import_from_string
 from rest_framework.utils.serializer_helpers import BindingDict
 
@@ -111,3 +113,56 @@ class ExpanderSerializerMixin():
                 ret[field.field_name] = field.to_representation(attribute)
 
         return ret
+
+
+class ExpanderListSerializer(ExpanderSerializerMixin, Serializer):
+    """
+    Serializer for nested list expansion.
+    """
+
+    def __init__(self, child_class, view_name, *args, **kwargs):
+        self.child_class = child_class
+        self.view_name = view_name
+        super(ExpanderListSerializer, self).__init__(*args, **kwargs)
+
+    @property
+    def child(self):
+        if not hasattr(self, '_child'):
+            if six.text_type(self.child_class):
+                self.child_class = import_from_string(self.child_class, None)
+
+            assert isinstance(self.child_class, ExpanderSerializerMixin)
+            self._child = self.child_class(context=self.context, source='*')
+            self._child.bind('results', self)
+
+        return self._child
+
+    @property
+    def expander(self):
+        return self.child.expander
+
+    @property
+    def expanded(self):
+        return self.child.expanded
+
+    def get_expanded_attribute(self, instance):
+        return instance
+
+    def get_collapsed_attribute(self, instance):
+        return instance
+
+    def to_expanded_representation(self, instance):
+        try:
+            objects = self.expander.data[instance.pk]
+        except KeyError:
+            objects = getattr(instance, self.source).all()[:3]
+
+        return OrderedDict((
+            ('url', reverse(self.view_name, (instance.pk,), request=self.context['request'])),
+            ('results', [self.child.to_representation(obj) for obj in objects]),
+        ))
+
+    def to_collapsed_representation(self, instance):
+        return OrderedDict((
+            ('url', reverse(self.view_name, (instance.pk,), request=self.context['request'])),
+        ))

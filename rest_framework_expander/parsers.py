@@ -49,6 +49,9 @@ class ExpanderParser():
 
                 serializer = serializer.fields[part]
 
+                while hasattr(serializer, 'child'):
+                    serializer = serializer.child
+
                 if part not in node.children:
                     node.children[part] = ExpanderContext(node, serializer)
 

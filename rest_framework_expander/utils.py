@@ -9,9 +9,12 @@ def get_serializer_path(serializer, attribute):
     path = list()
     current = serializer
 
-    while getattr(current, attribute, None):
-        value = getattr(current, attribute)
-        path.append(value)
+    while current:
+        value = getattr(current, attribute, None)
+
+        if value and not hasattr(current.parent, 'child'):
+            path.append(value)
+
         current = current.parent
 
     path.reverse()
