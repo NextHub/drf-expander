@@ -1,3 +1,6 @@
+import pytest
+
+
 def pytest_configure():
     from django.conf import settings
 
@@ -84,3 +87,18 @@ def pytest_configure():
         django.setup()
     except AttributeError:
         pass
+
+
+@pytest.fixture(scope='session')
+def db(request):
+    """
+    Initializes all database objects.
+    """
+    from tests.models import ExtraModel, FirstModel, SecondModel, ThirdModel
+
+    for i in range(10):
+        content = str(i)
+        extra = ExtraModel.objects.create(content=content)
+        first = FirstModel.objects.create(content=content, extra=extra)
+        second = SecondModel.objects.create(content=content, extra=extra, first=first)
+        ThirdModel.objects.create(content=content, extra=extra, second=second)

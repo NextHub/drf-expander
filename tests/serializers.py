@@ -10,23 +10,23 @@ class ExtraSerializer(ExpanderSerializerMixin, ModelSerializer):
 
 
 class FirstSerializer(ExpanderSerializerMixin, ModelSerializer):
-    extra = ExtraSerializer()
+    extra = ExtraSerializer(read_only=True)
 
     class Meta():
         model = FirstModel
 
 
 class SecondSerializer(ExpanderSerializerMixin, ModelSerializer):
-    first = FirstSerializer()
-    extra = ExtraSerializer()
+    first = FirstSerializer(read_only=True)
+    extra = ExtraSerializer(read_only=True)
 
     class Meta():
         model = SecondModel
 
 
 class ThirdSerializer(ExpanderSerializerMixin, ModelSerializer):
-    second = SecondSerializer()
-    extra = ExtraSerializer()
+    second = SecondSerializer(read_only=True)
+    extra = ExtraSerializer(read_only=True)
 
     class Meta():
         model = ThirdModel
