@@ -21,6 +21,9 @@ class RequestTestCase(APITestCase):
         if 'id' not in data:
             raise AssertionError('ID field is missing.')
 
+        if 'url' not in data:
+            raise AssertionError('URL field is missing.')
+
         if 'content' not in data:
             raise AssertionError('Object is collapsed.')
 
@@ -30,6 +33,9 @@ class RequestTestCase(APITestCase):
         """
         if 'id' not in data:
             raise AssertionError('ID field is missing.')
+
+        if 'url' not in data:
+            raise AssertionError('URL field is missing.')
 
         if 'content' in data:
             raise AssertionError('Object is expanded.')
