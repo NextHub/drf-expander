@@ -78,7 +78,7 @@ class ListRequestTestCase(RequestTestCase):
             self.assertExpanded(result['second'])
 
 
-class ObjectRequestTestCaseMixin():
+class DetailRequestTestCaseMixin():
     """
     Mixin for testing requests related to a single object.
     """
@@ -111,7 +111,7 @@ class ObjectRequestTestCaseMixin():
         self.assertExpanded(result['second'])
 
 
-class RetrieveRequestTestCase(ObjectRequestTestCaseMixin, RequestTestCase):
+class RetrieveRequestTestCase(DetailRequestTestCaseMixin, RequestTestCase):
     """
     Tests retrieve requests.
     """
@@ -123,7 +123,7 @@ class RetrieveRequestTestCase(ObjectRequestTestCaseMixin, RequestTestCase):
         return self.client.get(url, data)
 
 
-class PatchRequestTestCase(ObjectRequestTestCaseMixin, RequestTestCase):
+class PatchRequestTestCase(DetailRequestTestCaseMixin, RequestTestCase):
     """
     Tests patch requests.
     """
@@ -139,7 +139,7 @@ class PatchRequestTestCase(ObjectRequestTestCaseMixin, RequestTestCase):
         return self.client.patch(url, data, QUERY_STRING=query_string)
 
 
-class PutRequestTestCase(ObjectRequestTestCaseMixin, RequestTestCase):
+class PutRequestTestCase(DetailRequestTestCaseMixin, RequestTestCase):
     """
     Tests put requests.
     """
