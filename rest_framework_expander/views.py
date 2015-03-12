@@ -4,7 +4,7 @@ from rest_framework.response import Response
 from rest_framework_expander.settings import expander_settings
 
 
-class ExpanderViewMixin():
+class ExpanderViewMixin(object):
     """
     Expander support for views.
     """

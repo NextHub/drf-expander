@@ -1,7 +1,7 @@
 from rest_framework_expander.utils import get_serializer_field_path
 
 
-class ExpanderContext():
+class ExpanderContext(object):
     """
     Contains all information related to expander.
     """

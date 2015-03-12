@@ -5,7 +5,7 @@ from rest_framework_expander.exceptions import ExpanderFieldMissing, ExpanderDep
 from rest_framework_expander.settings import expander_settings
 
 
-class ExpanderParser():
+class ExpanderParser(object):
     """
     Parses the expander query parameters.
     """

@@ -3,7 +3,7 @@ from rest_framework.serializers import ListSerializer, Serializer
 from rest_framework_expander.exceptions import ExpanderAdapterMissing
 
 
-class ExpanderAdapter():
+class ExpanderAdapter(object):
     """
     Common interface for serializers.
     """
@@ -54,7 +54,7 @@ class ListExpanderAdapter(ExpanderAdapter):
         return True
 
 
-class ExpanderAdapterStrategy():
+class ExpanderAdapterStrategy(object):
     """
     Returns an instance of the best matching adapter class for serializer.
     """

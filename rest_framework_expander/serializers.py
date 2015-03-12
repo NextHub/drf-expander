@@ -9,7 +9,7 @@ from rest_framework.utils.serializer_helpers import BindingDict
 from rest_framework_expander.settings import expander_settings
 
 
-class ExpanderSerializerMixin():
+class ExpanderSerializerMixin(object):
     """
     Provides both collapsed and expanded representations.
     """

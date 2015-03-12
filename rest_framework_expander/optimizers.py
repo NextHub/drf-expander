@@ -7,7 +7,7 @@ from rest_framework_expander import utils
 from rest_framework_expander.exceptions import ExpanderContextMissing
 
 
-class ExpanderOptimizer():
+class ExpanderOptimizer(object):
     """
     Provides a minimal class for implementing optimizations.
     """
