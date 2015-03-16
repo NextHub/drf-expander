@@ -123,6 +123,7 @@ class ExpanderListSerializer(ExpanderSerializerMixin, Serializer):
     def __init__(self, child_class, view_name, *args, **kwargs):
         self.child_class = child_class
         self.view_name = view_name
+        kwargs['read_only'] = True
         super(ExpanderListSerializer, self).__init__(*args, **kwargs)
 
     @property
