@@ -166,3 +166,43 @@ class ExpanderListSerializer(ExpanderSerializerMixin, Serializer):
         return OrderedDict((
             ('url', reverse(self.view_name, (instance.pk,), request=self.context['request'])),
         ))
+
+
+class ExpanderProxySerializer(Serializer):
+    """
+    Serializer with lazy imports for resolving cycles.
+    """
+
+    def __init__(self, child_class, *args, **kwargs):
+        self._child_specification = (child_class, args, kwargs)
+        super(ExpanderProxySerializer, self).__init__(read_only=True)
+
+    @property
+    def child(self):
+        if not hasattr(self, '_child'):
+            child_class, args, kwargs = self._child_specification
+
+            if six.text_type(child_class):
+                child_class = import_from_string(child_class, None)
+
+            self._child = child_class(*args, **kwargs)
+
+        return self._child
+
+    def bind(self, field_name, parent):
+        super(ExpanderProxySerializer, self).bind(field_name, parent)
+        self.child.bind(field_name, parent)
+
+    @property
+    def expander(self):
+        return self.child.expander
+
+    @property
+    def expanded(self):
+        return self.child.expanded
+
+    def get_attribute(self, instance):
+        return self.child.get_attribute(instance)
+
+    def to_representation(self, instance):
+        return self.child.to_representation(instance)
