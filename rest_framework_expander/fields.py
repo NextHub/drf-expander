@@ -12,30 +12,21 @@ class CollapsedIdentityField(ReadOnlyField):
         if self.field_name not in self.parent.fields:
             raise SkipField()
 
-        source = self.parent.source
-
-        if not source or source == '*':
-            source = 'pk'
-        else:
-            source += '_id'
-
-        if hasattr(instance, source):
-            return getattr(instance, source)
-        else:
-            raise SkipField()
+        return instance
 
 
-class CollapsedHyperlinkField(CollapsedIdentityField):
+class CollapsedHyperlinkField(ReadOnlyField):
     """
     Returns the instance URL without making a database query.
     """
 
     def get_attribute(self, instance):
-        identity = super(CollapsedHyperlinkField, self).get_attribute(instance)
+        if self.field_name not in self.parent.fields:
+            raise SkipField()
 
         try:
             viewname = self.parent.fields[self.field_name].view_name
-            args = (identity,)
+            args = (instance,)
             request = self.context['request']
 
             return reverse(viewname, args, request=request)

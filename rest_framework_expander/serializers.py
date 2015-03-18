@@ -80,7 +80,14 @@ class ExpanderSerializerMixin(object):
         """
         Returns attribute for the collapsed representation.
         """
-        return instance
+        source = self.source
+
+        if not source or source == '*':
+            source = 'pk'
+        else:
+            source += '_id'
+
+        return getattr(instance, source, None)
 
     def to_representation(self, instance):
         if self.expanded:
