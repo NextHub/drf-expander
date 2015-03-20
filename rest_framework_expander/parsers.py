@@ -26,7 +26,10 @@ class ExpanderParser(object):
         root = ExpanderContext(None, None)
 
         request = self.adapter.context['request']
-        param = request.query_params.get(self.expansion_key, '')
+        param = request.query_params.get(self.expansion_key)
+
+        if not param:
+            return root
 
         for item in param.split(self.expansion_item_separator):
             parts = item.split(self.expansion_path_separator, self.max_depth + 1)
