@@ -59,11 +59,14 @@ class ExpanderListModelMixin(ExpanderViewMixin):
         queryset = optimizer.to_optimized_queryset(queryset)
         page = self.paginate_queryset(queryset)
 
+        adapter.instance = list(page if page is not None else queryset)
+
+        if adapter.instance:
+            adapter.instance = optimizer.to_optimized_objects(adapter.instance)
+
         if page is not None:
-            adapter.instance = optimizer.to_optimized_objects(list(page))
             return self.get_paginated_response(serializer.data)
         else:
-            adapter.instance = optimizer.to_optimized_objects(list(queryset))
             return Response(serializer.data)
 
 
