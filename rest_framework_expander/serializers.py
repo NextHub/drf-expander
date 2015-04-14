@@ -14,6 +14,14 @@ class ExpanderSerializerMixin(object):
     Provides both collapsed and expanded representations.
     """
 
+    def __init__(self, *args, **kwargs):
+        expanded = kwargs.pop('expanded', None)
+
+        if expanded is not None:
+            self._expanded = expanded
+
+        super(ExpanderSerializerMixin, self).__init__(*args, **kwargs)
+
     @property
     def expander(self):
         """
@@ -128,21 +136,29 @@ class ExpanderListSerializer(ExpanderSerializerMixin, Serializer):
     """
 
     def __init__(self, child_class, view_name, *args, **kwargs):
-        self.child_class = child_class
         self.view_name = view_name
+
         kwargs['read_only'] = True
-        super(ExpanderListSerializer, self).__init__(*args, **kwargs)
+        kwargs['source'] = '*'
+        self._child_specification = (child_class, args, kwargs)
+
+        super(ExpanderListSerializer, self).__init__(read_only=True)
 
     @property
     def child(self):
         if not hasattr(self, '_child'):
-            if six.text_type(self.child_class):
-                self.child_class = import_from_string(self.child_class, None)
+            child_class, args, kwargs = self._child_specification
 
-            self._child = self.child_class(context=self.context, source='*')
-            self._child.bind('results', self)
+            if six.text_type(child_class):
+                child_class = import_from_string(child_class, None)
+
+            self._child = child_class(*args, **kwargs)
 
         return self._child
+
+    def bind(self, field_name, parent):
+        super(ExpanderListSerializer, self).bind(field_name, parent)
+        self.child.bind('results', self)
 
     @property
     def expander(self):
@@ -161,7 +177,7 @@ class ExpanderListSerializer(ExpanderSerializerMixin, Serializer):
     def to_expanded_representation(self, instance):
         try:
             objects = self.expander.data[instance.pk]
-        except KeyError:
+        except (AttributeError, KeyError):
             objects = getattr(instance, self.source).all()[:3]
 
         return OrderedDict((
