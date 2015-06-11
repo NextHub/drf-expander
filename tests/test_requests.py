@@ -6,7 +6,7 @@ from rest_framework.test import APITestCase
 from tests.models import ExtraModel, SecondModel, ThirdModel
 
 
-pytestmark = pytest.mark.usefixtures('db')
+pytestmark = pytest.mark.django_db()
 
 
 class RequestTestCase(APITestCase):

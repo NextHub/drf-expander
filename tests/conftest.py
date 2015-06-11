@@ -89,14 +89,14 @@ def pytest_configure():
         pass
 
 
-@pytest.fixture(scope='session')
-def db(request):
+@pytest.fixture(autouse=True)
+def project_setup(db):
     """
     Initializes all database objects.
     """
     from tests.models import ExtraModel, FirstModel, SecondModel, ThirdModel
 
-    for i in range(10):
+    for i in range(5):
         content = str(i)
         extra = ExtraModel.objects.create(content=content)
         first = FirstModel.objects.create(content=content, extra=extra)
