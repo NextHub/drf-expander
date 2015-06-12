@@ -53,3 +53,20 @@ def get_model_source_name(source_path, model):
             return None
 
     return '__'.join(source_path)
+
+
+def get_virtual_field(meta, field_name):
+    """
+    Returns a specific virtual field from meta.
+    """
+    target = None
+
+    for field in meta.virtual_fields:
+        if field.name == field_name:
+            target = field
+            break
+
+    if not target:
+        raise FieldDoesNotExist("{} has no virtual field named '{}'".format(meta.object_name, field_name))
+
+    return target

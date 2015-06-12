@@ -1,11 +1,12 @@
 from collections import OrderedDict
+from django.db.models.fields import FieldDoesNotExist
 from django.utils import six
 from rest_framework.fields import SkipField
 from rest_framework.reverse import reverse
 from rest_framework.serializers import Serializer
 from rest_framework.settings import import_from_string
-from rest_framework.utils.serializer_helpers import BindingDict
 
+from rest_framework_expander.relations import PKObject
 from rest_framework_expander.settings import expander_settings
 
 
@@ -49,26 +50,19 @@ class ExpanderSerializerMixin(object):
 
         return self._expanded
 
-    def get_collapsed_fields(self):
-        """
-        Returns the fields for the collapsed representations.
-        """
-        fields = OrderedDict()
-
-        for key, value in six.iteritems(expander_settings.COLLAPSED_FIELDS):
-            fields[key] = import_from_string(value, 'COLLAPSED_FIELDS')()
-
-        return fields
-
     @property
     def collapsed_fields(self):
         """
         Dictionary containing the fields of the collapsed representation.
         """
         if not hasattr(self, '_collapsed_fields'):
-            self._collapsed_fields = BindingDict(self)
-            for key, value in six.iteritems(self.get_collapsed_fields()):
-                self._collapsed_fields[key] = value
+            meta = getattr(self, 'Meta', None)
+            field_names = getattr(meta, 'collapsed_fields', expander_settings.COLLAPSED_FIELDS)
+            self._collapsed_fields = OrderedDict()
+
+            for field_name in field_names:
+                if field_name in self.fields.keys():
+                    self._collapsed_fields[field_name] = self.fields[field_name]
 
         return self._collapsed_fields
 
@@ -88,14 +82,11 @@ class ExpanderSerializerMixin(object):
         """
         Returns attribute for the collapsed representation.
         """
-        source = self.source
-
-        if not source or source == '*':
-            source = 'pk'
-        else:
-            source += '_id'
-
-        return getattr(instance, source, None)
+        try:
+            obj = PKObject(instance, self.field_name)
+            return obj if obj.pk is not None else None
+        except (FieldDoesNotExist, AttributeError):
+            return super(ExpanderSerializerMixin, self).get_attribute(instance)
 
     def to_representation(self, instance):
         if self.expanded:
