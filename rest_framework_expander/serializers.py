@@ -6,6 +6,7 @@ from rest_framework.reverse import reverse
 from rest_framework.serializers import Serializer
 from rest_framework.settings import import_from_string
 
+from rest_framework_expander.context import ExpanderContext
 from rest_framework_expander.relations import PKObject
 from rest_framework_expander.settings import expander_settings
 
@@ -32,6 +33,10 @@ class ExpanderSerializerMixin(object):
             if 'expander' in self.context:
                 root = self.context['expander']
                 self._expander = root.get_child_by_serializer(self)
+            elif expander_settings.DEFAULT_EXPANDED:
+                root = ExpanderContext(None, None)
+                self.context['expander'] = root
+                self._expander = root.get_child_by_serializer(self)
             else:
                 self._expander = None
 
@@ -43,10 +48,7 @@ class ExpanderSerializerMixin(object):
         True if this serializer should be expanded.
         """
         if not hasattr(self, '_expanded'):
-            if 'expander' in self.context:
-                self._expanded = self.expander is not None
-            else:
-                self._expanded = expander_settings.DEFAULT_EXPANDED
+            self._expanded = self.expander is not None
 
         return self._expanded
 
