@@ -167,6 +167,9 @@ class ExpanderListSerializer(ExpanderSerializerMixin, Serializer):
     def get_collapsed_attribute(self, instance):
         return instance
 
+    def get_url(self, instance):
+        return reverse(self.view_name, (instance.pk,), request=self.context['request'])
+
     def to_expanded_representation(self, instance):
         try:
             objects = self.expander.data[instance.pk]
@@ -174,13 +177,13 @@ class ExpanderListSerializer(ExpanderSerializerMixin, Serializer):
             objects = getattr(instance, self.source).all()[:3]
 
         return OrderedDict((
-            ('url', reverse(self.view_name, (instance.pk,), request=self.context['request'])),
+            ('url', self.get_url(instance)),
             ('results', [self.child.to_representation(obj) for obj in objects]),
         ))
 
     def to_collapsed_representation(self, instance):
         return OrderedDict((
-            ('url', reverse(self.view_name, (instance.pk,), request=self.context['request'])),
+            ('url', self.get_url(instance)),
         ))
 
 
