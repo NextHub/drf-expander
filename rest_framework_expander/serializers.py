@@ -1,4 +1,5 @@
 from collections import OrderedDict
+from copy import deepcopy
 from django.db.models.fields import FieldDoesNotExist
 from django.utils import six
 from rest_framework.fields import SkipField
@@ -91,10 +92,22 @@ class ExpanderSerializerMixin(object):
             return super(ExpanderSerializerMixin, self).get_attribute(instance)
 
     def to_representation(self, instance):
+        if 'representations' not in self.context:
+            self.context['representations'] = dict()
+
+        cache = self.context['representations']
+        key = (type(self), self.expander, self.expanded, instance.pk)
+
+        if key in cache:
+            return deepcopy(cache[key])
+
         if self.expanded:
-            return self.to_expanded_representation(instance)
+            representation = self.to_expanded_representation(instance)
         else:
-            return self.to_collapsed_representation(instance)
+            representation = self.to_collapsed_representation(instance)
+
+        cache[key] = representation
+        return representation
 
     def to_expanded_representation(self, instance):
         """
