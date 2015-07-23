@@ -99,7 +99,7 @@ class ExpanderSerializerMixin(object):
         key = (type(self), self.expander, self.expanded, instance.pk)
 
         if key in cache:
-            return deepcopy(cache[key])
+            return cache[key]
 
         if self.expanded:
             representation = self.to_expanded_representation(instance)
