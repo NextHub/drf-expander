@@ -1,5 +1,4 @@
 from collections import OrderedDict
-from copy import deepcopy
 from django.db.models.fields import FieldDoesNotExist
 from django.utils import six
 from rest_framework.fields import SkipField
