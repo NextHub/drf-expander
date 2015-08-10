@@ -95,7 +95,7 @@ class ExpanderSerializerMixin(object):
             self.context['representations'] = dict()
 
         cache = self.context['representations']
-        key = (type(self), self.expander, self.expanded, instance.pk)
+        key = (self, instance.pk)
 
         if key in cache:
             return cache[key]
