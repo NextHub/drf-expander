@@ -10,7 +10,7 @@ Inline expansion for Django REST Framework.
 
 * Python (2.7, 3.2, 3.3, 3.4)
 * Django (1.8)
-* Django REST Framework (3.1)
+* Django REST Framework (3.1, 3.2, 3.3)
 
 ## Installation
 
