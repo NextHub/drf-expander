@@ -8,7 +8,7 @@ Inline expansion for Django REST Framework.
 
 ## Requirements
 
-* Python (2.7, 3.2, 3.3, 3.4)
+* Python (2.7, 3.2, 3.3, 3.4, 3.5)
 * Django (1.8)
 * Django REST Framework (3.1, 3.2, 3.3)
 
