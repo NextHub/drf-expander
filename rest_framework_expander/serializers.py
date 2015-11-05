@@ -87,7 +87,7 @@ class ExpanderSerializerMixin(object):
         try:
             obj = PKObject(instance, self.field_name)
             return obj if obj.pk is not None else None
-        except (FieldDoesNotExist, AttributeError):
+        except (FieldDoesNotExist, TypeError):
             return super(ExpanderSerializerMixin, self).get_attribute(instance)
 
     def to_representation(self, instance):
