@@ -1,7 +1,7 @@
+from django.apps import apps
 from django.contrib.contenttypes.fields import GenericForeignKey
 from django.contrib.contenttypes.models import ContentType
 from django.db.models.fields.related import ForeignKey
-from django.db.models.loading import get_model
 
 
 class PKObject(object):
@@ -22,7 +22,7 @@ class PKObject(object):
             content_type_field = parent._meta.get_field(field.ct_field)
             content_type_id = getattr(parent, content_type_field.attname)
             content_type = ContentType.objects.get_for_id(content_type_id)
-            target_model = get_model(content_type.app_label, content_type.model)
+            target_model = apps.get_model(content_type.app_label, content_type.model)
 
             target_field = parent._meta.get_field(field.fk_field)
             target_meta = target_model._meta
